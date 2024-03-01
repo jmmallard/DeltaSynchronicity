@@ -9,7 +9,7 @@ output:
 
 Figures for Mallard et al: Seasonality of bank vegetation and riverine suspended sediment concentrations in global deltas
 
-```{r, echo=FALSE, message=FALSE}
+```{r Packages, echo=FALSE, message=FALSE}
 #Libraries
 library(tidyverse)
 library(gridExtra)
@@ -22,7 +22,7 @@ library(ggExtra)
 
 ```
 
-```{r, echo=FALSE, message=FALSE}
+```{r LoadData, echo=FALSE, message=FALSE}
 #Clear workspace
 rm(list = ls())
 
@@ -36,12 +36,12 @@ world <- ggplot() +
 ```
 
 Figure 1: Conceptual Figure
-```{r, echo=FALSE}
-knitr::include_graphics("manuscript/figures/Fig2.png")
+```{r Figure 1, echo=FALSE}
+knitr::include_graphics("manuscript/figures/ConceptualFig.png")
 ```
 
 Figure 2: Map of all deltas
-```{r, echo=FALSE}
+```{r Figure 2, echo=FALSE}
 Fig2 <- world + 
   geom_point(aes(x = Lon, y = Lat, color = Included),
              data = DeltaLocations, 
@@ -52,102 +52,86 @@ Fig2
 ggsave("manuscript/figures/Fig2.png")
 ```
 
-Figure 3: Example polygons
+Figure 3: Example TS
+```{r Figure 3, echo = FALSE}
+Magdalena <- DeltaPlotter("Magdalena")
 
+Nile <- DeltaPlotter("Nile")
 
-Figure 4: Example TS
-```{r, echo = FALSE}
-# Magdalena <- DeltaPlotter("Magdalena")
-#
-# Nile <- DeltaPlotter("Nile")
-#
-# Mississippi <- DeltaPlotter("Mississippi")
-#
-# Columbia <- DeltaPlotter("Columbia")
-#
-# Fig4 <- ggarrange(Magdalena,Nile, #This doesn't work right now, possibly due to the output type of DeltaPlotter (large gtable)
-#                   labels = c("A", "B"),
-#                   ncol = 2, nrow = 1,
-#                   common.legend = T)
-#
-# Fig4
-# ggsave("manuscript/figures/Fig4.png")
-#
+Mississippi <- DeltaPlotter("Mississippi")
+
+Columbia <- DeltaPlotter("Columbia")
+
+Fig3 <- ggarrange(Magdalena,Nile,Mississippi,Columbia, #This doesn't work right now, possibly due to the output type of DeltaPlotter (large gtable)
+                  labels = c("A", "B"),
+                  ncol = 2, nrow = 2,
+                  common.legend = T)
+
+Fig3
+ggsave("manuscript/figures/Fig3.png")
 ```
 
-Figure 5: Max month for NDVI and NSMI
-```{r, echo = FALSE}
-Fig5a <- world + geom_point(aes(x = Lon, y = Lat, color = MaxMeanNDVImonth), 
-                            data = DeltaDatawLocations, 
-                            size = 3) + 
-  theme(legend.position = "left") + 
-  labs(color="Month") +
-  scale_color_gradientn(colors = kovesi.cyclic_wrwbw_40_90_c42_s25(12),guide = "colorbar")
-            
-Fig5b <- ggplot(DeltaDatawLocations, aes(y = Lat, x = MaxMeanNDVImonth)) + geom_point()
-
-Fig5c <- world + geom_point(aes(x = Lon, y = Lat, color = MaxMeanNSMImonth),
-                            data = DeltaDatawLocations, 
-                            size = 3) + 
-  theme(legend.position = "left") + 
-  labs(color="Month") +
-  scale_color_gradientn(colors = kovesi.cyclic_wrwbw_40_90_c42_s25(12),guide = "colorbar")
-
-Fig5d <- ggplot(DeltaDatawLocations, aes(y = Lat, x = MaxMeanNSMImonth)) + geom_point()
-
-Fig5 <- ggarrange(Fig5a,Fig5b,Fig5c,Fig5d,
-                  labels = c("a","b","c","d"),
-                  ncol = 2, nrow = 2)
-
-Fig5
-ggsave("manuscript/figures/Fig5.png")
-
-```
-
-Figure 6: Range for NDVI and NSMI
-```{r, echo=FALSE}
-Fig6a <- world + geom_point(aes(x = Lon, y = Lat, color = rangeNDVI),
+Figure 4: Range for NDVI and NSMI
+```{r Figure 4, echo=FALSE}
+Fig4a <- world + geom_point(aes(x = Lon, y = Lat, color = rangeNDVI),
              data = DeltaDatawLocations, 
              size = 3) + theme(legend.position = "left") + labs(color="NDVI \nRange")
-Fig6b <- ggplot(DeltaDatawLocations, aes(y = Absolute_Latitude, x = rangeNDVI)) + geom_point() 
+Fig4b <- ggplot(DeltaDatawLocations, aes(y = Absolute_Latitude, x = rangeNDVI)) + geom_point() 
 
-Fig6c <- world + geom_point(aes(x = Lon, y = Lat, color = rangeNSMI),
+Fig4c <- world + geom_point(aes(x = Lon, y = Lat, color = rangeNSMI),
              data = DeltaDatawLocations, 
              size = 3) + theme(legend.position = "left") + labs(color="NSMI \nRange")
-Fig6d <- ggplot(DeltaDatawLocations, aes(y = Absolute_Latitude, x = rangeNSMI)) + geom_point() 
+Fig4d <- ggplot(DeltaDatawLocations, aes(y = Absolute_Latitude, x = rangeNSMI)) + geom_point() 
 
-Fig6 <- ggarrange(Fig6a,Fig6b,Fig6c,Fig6d,
+Fig4 <- ggarrange(Fig4a,Fig4b,Fig4c,Fig4d,
                   labels = c("a","b","c","d"),
                   ncol = 2, nrow = 2)
 
-Fig6
-ggsave("manuscript/figures/Fig6.png")
+Fig4
+ggsave("manuscript/figures/Fig4.png")
 ```
 
-Figure 7: Max offset with hist
-```{r, echo = FALSE}
-Fig7a <- world + geom_point(aes(x = Lon, y = Lat, color = MaxOffset),
+Figure 5: Max offset with hist
+```{r Figure 5, echo = FALSE}
+Fig5a <- world + geom_point(aes(x = Lon, y = Lat, color = MaxOffsetNSMI),
              data = DeltaDatawLocations, 
              size = 5) + theme(legend.position = "bottom")
 
-Fig7b1 <- ggplot(DeltaDatawLocations, aes(y = Absolute_Latitude, x = MaxOffset)) + geom_point() + theme_few() +
+Fig5b1 <- ggplot(DeltaDatawLocations, aes(y = Absolute_Latitude, x = MaxOffsetNSMI)) + geom_point() + theme_few() +
     theme(axis.title = element_blank(),
         axis.text = element_text(size = 20))
 
-Fig7b2 <- ggMarginal(Fig7b1, type = "histogram", margins = "x", size = 3, fill = "#386be0")
+Fig5b2 <- ggMarginal(Fig5b1, type = "histogram", margins = "x", size = 3, fill = "#386be0")
 
-Fig7 <- ggarrange(Fig7a,Fig7b2,
+Fig5 <- ggarrange(Fig5a,Fig5b2,
                   labels = c("a","b"),
                   ncol = 2, nrow = 1,
                   heights = c(0.5,1))
 
-Fig7
-ggsave("manuscript/figures/Fig7.png")
-
+Fig5
+ggsave("manuscript/figures/Fig5.png")
 ```
 
+Supplemental
 Figure S1: All time series
+```{r Figure S1, echo = FALSE}
+# Set destination and open PDF
+dest <- "manuscript/figures/testPDF.pdf"
+pdf(file = dest)
 
+# # Make a double deltasplotter file
+# DeltaPlotter("Magdalena")
+# DeltaPlotter("Mississippi")
+
+for (i in 1:length(DeltaDatawLocations$Delta)) {
+  print(DeltaPlotter(DeltaDatawLocations$Delta[i]))
+}
+
+dev.off()
+```
+Figure S2: Methods
+Figure S3: Justification for NSMI
+Figure S4: Q analysis
 
 
 
@@ -267,3 +251,31 @@ Asynchrony between NDVI and NDSSI
 # maxOffset2
 ```
 
+Max month for NDVI and NSMI
+```{r, echo = FALSE}
+# Fig5a <- world + geom_point(aes(x = Lon, y = Lat, color = MaxMeanNDVImonth), 
+#                             data = DeltaDatawLocations, 
+#                             size = 3) + 
+#   theme(legend.position = "left") + 
+#   labs(color="Month") +
+#   scale_color_gradientn(colors = kovesi.cyclic_wrwbw_40_90_c42_s25(12),guide = "colorbar")
+#             
+# Fig5b <- ggplot(DeltaDatawLocations, aes(y = Lat, x = MaxMeanNDVImonth)) + geom_point()
+# 
+# Fig5c <- world + geom_point(aes(x = Lon, y = Lat, color = MaxMeanNSMImonth),
+#                             data = DeltaDatawLocations, 
+#                             size = 3) + 
+#   theme(legend.position = "left") + 
+#   labs(color="Month") +
+#   scale_color_gradientn(colors = kovesi.cyclic_wrwbw_40_90_c42_s25(12),guide = "colorbar")
+# 
+# Fig5d <- ggplot(DeltaDatawLocations, aes(y = Lat, x = MaxMeanNSMImonth)) + geom_point()
+# 
+# Fig5 <- ggarrange(Fig5a,Fig5b,Fig5c,Fig5d,
+#                   labels = c("a","b","c","d"),
+#                   ncol = 2, nrow = 2)
+# 
+# Fig5
+# ggsave("manuscript/figures/Fig5.png")
+
+```
